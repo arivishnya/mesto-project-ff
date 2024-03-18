@@ -14,7 +14,9 @@ function createCard(card, deletedCardFunction) {
   cardElement.querySelector(".card__title").textContent = card.name;
 
   const cardDeleteElement = cardElement.querySelector(".card__delete-button");
-  cardDeleteElement.addEventListener("click", deletedCardFunction);
+  cardDeleteElement.addEventListener("click", (event) =>
+    deletedCardFunction(event.target.parentElement)
+  );
 
   return cardElement;
 }
@@ -26,7 +28,5 @@ function deleteCard(cardElement) {
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((card) => {
-  placesList.append(
-    createCard(card, (event) => deleteCard(event.target.parentElement))
-  );
+  placesList.append(createCard(card, deleteCard));
 });
