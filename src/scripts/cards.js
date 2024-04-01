@@ -1,5 +1,4 @@
-const page = document.querySelector(".page");
-const cardTemplate = page.querySelector("#card-template").content;
+const cardTemplate = document.querySelector("#card-template").content;
 
 const initialCards = [
   {
@@ -39,6 +38,9 @@ function createCard(card, deletedCardFunction) {
     deletedCardFunction(event.target.parentElement)
   );
 
+  const cardLikeButtonElement = cardElement.querySelector(".card__like-button");
+  cardLikeButtonElement.addEventListener("click", toggleLikeCard);
+
   return cardElement;
 }
 
@@ -46,20 +48,8 @@ function deleteCard(cardElement) {
   cardElement.remove();
 }
 
-function toggleLikeCard(elem) {
-  if (elem.classList.contains("card__like-button_is-active")) {
-    removeLikeCard(elem);
-  } else {
-    addLikeCard(elem);
-  }
-}
-
-function addLikeCard(elem) {
-  elem.classList.add("card__like-button_is-active");
-}
-
-function removeLikeCard(elem) {
-  elem.classList.remove("card__like-button_is-active");
+function toggleLikeCard(event) {
+  event.target.classList.toggle("card__like-button_is-active");
 }
 
 export { initialCards, createCard, deleteCard, toggleLikeCard };
