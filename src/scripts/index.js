@@ -22,7 +22,9 @@ const placeNameInput = formNewPlace["place-name"];
 const linkInput = formNewPlace.link;
 
 initialCards.forEach((card) => {
-  placesList.append(createCard(card, deleteCard));
+  placesList.append(
+    createCard(card, deleteCard, openPopupImage, toggleLikeCard)
+  );
 });
 
 page.addEventListener("click", function (event) {
@@ -39,13 +41,16 @@ page.addEventListener("click", function (event) {
   } else if (event.target.classList.contains("profile__add-button")) {
     resetForm(formNewPlace);
     openPopup(popupTypeNewCard);
-  } else if (event.target.classList.contains("card__image")) {
-    const card = event.target.parentElement;
-    popupImage.src = event.target.src;
-    popupCaption.textContent = card.querySelector(".card__title").textContent;
-    openPopup(popupTypeImage);
   }
 });
+
+function openPopupImage(event) {
+  const card = event.target.parentElement;
+  popupImage.src = event.target.src;
+  popupCaption.textContent = popupImage.alt =
+    card.querySelector(".card__title").textContent;
+  openPopup(popupTypeImage);
+}
 
 formEditProfile.addEventListener("submit", handleFormEditProfileSubmit);
 formNewPlace.addEventListener("submit", handleFormNewPlaceSubmit);

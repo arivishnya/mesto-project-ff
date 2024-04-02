@@ -27,11 +27,19 @@ const initialCards = [
   },
 ];
 
-function createCard(card, deletedCardFunction) {
+function createCard(
+  card,
+  deletedCardFunction,
+  openPopupImageFunction,
+  toggleLikeCard
+) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 
   cardElement.querySelector(".card__image").src = card.link;
   cardElement.querySelector(".card__title").textContent = card.name;
+
+  const cardImage = cardElement.querySelector(".card__image");
+  cardImage.addEventListener("click", openPopupImageFunction);
 
   const cardDeleteElement = cardElement.querySelector(".card__delete-button");
   cardDeleteElement.addEventListener("click", (event) =>
