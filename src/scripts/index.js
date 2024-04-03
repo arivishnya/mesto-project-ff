@@ -1,5 +1,6 @@
 import "../../pages/index.css";
-import { initialCards, createCard, deleteCard, toggleLikeCard } from "./cards";
+import initialCards from "./cards";
+import { createCard, deleteCard, toggleLikeCard } from "./card";
 import { openPopup, closePopup, closePopupWithOverlay } from "./modal";
 
 const page = document.querySelector(".page");
