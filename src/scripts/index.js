@@ -2,6 +2,7 @@ import "../../pages/index.css";
 import initialCards from "./cards";
 import { createCard, deleteCard, toggleLikeCard } from "./card";
 import { openPopup, closePopup, closePopupWithOverlay } from "./modal";
+import { enableValidation, clearValidation } from "./validation";
 
 const page = document.querySelector(".page");
 const placesList = page.querySelector(".places__list");
@@ -38,9 +39,11 @@ page.addEventListener("click", function (event) {
   } else if (event.target.classList.contains("profile__edit-button")) {
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
+    clearValidation(formEditProfile, false);
     openPopup(popupTypeEdit);
   } else if (event.target.classList.contains("profile__add-button")) {
     resetForm(formNewPlace);
+    clearValidation(formNewPlace);
     openPopup(popupTypeNewCard);
   }
 });
@@ -84,3 +87,11 @@ function handleFormNewPlaceSubmit(event) {
 
   closePopup(popupTypeNewCard);
 }
+
+enableValidation({
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__form-error_visible",
+});
