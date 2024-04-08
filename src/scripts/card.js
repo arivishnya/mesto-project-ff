@@ -1,4 +1,4 @@
-import { userId, deleteCard } from "./api";
+import { userId, deleteCard, addCardLike, deleteCardLike } from "./api";
 import { openPopup, closePopup } from "./modal";
 
 const cardTemplate = document.querySelector("#card-template").content;
@@ -11,28 +11,34 @@ function createCard(
 ) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
 
-  cardElement.querySelector(".card__image").src = card.link;
-  cardElement.querySelector(".card__title").textContent = card.name;
+  const { link, name, owner, _id, likes } = card;
 
   const cardImage = cardElement.querySelector(".card__image");
-  cardImage.addEventListener("click", openPopupImageFunction);
+  cardImage.src = link;
+  cardImage.alt = name;
+  cardElement.querySelector(".card__title").textContent = name;
 
   const cardDeleteElement = cardElement.querySelector(".card__delete-button");
-  if (userId && card.owner && userId != card.owner._id) {
-    cardDeleteElement.style = "display: none";
+  if (userId != owner._id) {
+    cardDeleteElement.style.display = "none";
   } else {
-    cardDeleteElement.addEventListener("click", (event) =>
-      deletedCardFunction(card._id, event.target.parentElement)
+    cardDeleteElement.addEventListener("click", () =>
+      deletedCardFunction(card._id, cardElement)
     );
   }
 
-  if (card.likes && card.likes.length) {
-    const cardLikeTextElement = cardElement.querySelector(".card__like-text");
-    cardLikeTextElement.textContent = card.likes.length;
-  }
+  cardElement.querySelector(".card__like-text").textContent = likes.length;
 
   const cardLikeButtonElement = cardElement.querySelector(".card__like-button");
-  cardLikeButtonElement.addEventListener("click", toggleLikeCard);
+  if (likes.some((user) => user._id == userId)) {
+    cardLikeButtonElement.classList.add("card__like-button_is-active");
+  }
+
+  cardLikeButtonElement.addEventListener("click", (event) =>
+    toggleLikeCard(event, _id, cardElement)
+  );
+
+  cardImage.addEventListener("click", openPopupImageFunction);
 
   return cardElement;
 }
@@ -50,8 +56,21 @@ function deleteCardControl(cardId, cardElement) {
   });
 }
 
-function toggleLikeCard(event) {
-  event.target.classList.toggle("card__like-button_is-active");
+function toggleLikeCard(event, cardId, cardElement) {
+  const likeButton = event.target;
+  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+
+  const callback = (card) => {
+    const likesCount = card.likes.length;
+    cardElement.querySelector(".card__like-text").textContent = likesCount;
+    likeButton.classList.toggle("card__like-button_is-active", !isLiked);
+  };
+
+  if (isLiked) {
+    deleteCardLike(cardId).then((updatedCard) => callback(updatedCard));
+  } else {
+    addCardLike(cardId).then((updatedCard) => callback(updatedCard));
+  }
 }
 
 export { createCard, deleteCardControl, toggleLikeCard };

@@ -1,67 +1,122 @@
 const token = "a0036ef3-200a-495e-9686-79f48f6c8df6";
 const cohort = "wff-cohort-10";
-const url = `https://mesto.nomoreparties.co/v1/${cohort}`;
-const urlChangeData = `https://nomoreparties.co/v1/${cohort}`;
+
+const config = {
+  headers: {
+    authorization: token,
+  },
+  headersWithContentType: {
+    authorization: token,
+    "Content-Type": "application/json",
+  },
+  baseUrl: `https://mesto.nomoreparties.co/v1/${cohort}`,
+  editBaseUrl: `https://nomoreparties.co/v1/${cohort}`,
+};
 let userId;
 
+function handleResponse(response) {
+  if (response.ok) {
+    return response.json();
+  }
+  return Promise.reject(`Ошибка: ${response.status}`);
+}
+
+function handleError(error) {
+  console.error(error);
+}
+
 function getUser() {
-  return fetch(`${url}/users/me`, {
-    headers: {
-      authorization: token,
-    },
+  return fetch(`${config.baseUrl}/users/me`, {
+    headers: config.headers,
   })
-    .then((res) => res.json())
+    .then(handleResponse)
     .then((result) => {
       userId = result._id;
       return result;
-    });
+    })
+    .catch(handleError);
 }
 
 function getCards() {
-  return fetch(`${url}/cards`, {
-    headers: {
-      authorization: token,
-    },
+  return fetch(`${config.baseUrl}/cards`, {
+    headers: config.headers,
   })
-    .then((res) => res.json())
-    .then((result) => result);
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
 }
 
 function changeUserInfo(data) {
-  return fetch(`${urlChangeData}/users/me`, {
+  return fetch(`${config.editBaseUrl}/users/me`, {
     method: "PATCH",
-    headers: {
-      authorization: token,
-      "Content-Type": "application/json",
-    },
+    headers: config.headersWithContentType,
     body: JSON.stringify(data),
   })
-    .then((res) => res.json())
-    .then((result) => result);
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
 }
 
 function addCard(data) {
-  return fetch(`${urlChangeData}/cards`, {
+  return fetch(`${config.editBaseUrl}/cards`, {
     method: "POST",
-    headers: {
-      authorization: token,
-      "Content-Type": "application/json",
-    },
+    headers: config.headersWithContentType,
     body: JSON.stringify(data),
   })
-    .then((res) => res.json())
-    .then((result) => result);
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
 }
 
 function deleteCard(cardId) {
-  return fetch(`${urlChangeData}/cards/${cardId}`, {
+  return fetch(`${config.editBaseUrl}/cards/${cardId}`, {
     method: "DELETE",
-    headers: {
-      authorization: token,
-    },
+    headers: config.headers,
   })
-    .then((res) => res.json())
-    .then((result) => result);
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
 }
 
-export { userId, getUser, getCards, changeUserInfo, addCard, deleteCard };
+function addCardLike(cardId) {
+  return fetch(`${config.editBaseUrl}/cards/likes/${cardId}`, {
+    method: "PUT",
+    headers: config.headers,
+  })
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
+}
+
+function deleteCardLike(cardId) {
+  return fetch(`${config.editBaseUrl}/cards/likes/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  })
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
+}
+
+function changeUserAvatar(data) {
+  return fetch(`${config.editBaseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: config.headersWithContentType,
+    body: JSON.stringify(data),
+  })
+    .then(handleResponse)
+    .then((result) => result)
+    .catch(handleError);
+}
+
+export {
+  userId,
+  getUser,
+  getCards,
+  changeUserInfo,
+  addCard,
+  deleteCard,
+  addCardLike,
+  deleteCardLike,
+  changeUserAvatar,
+};
