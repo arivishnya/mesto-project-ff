@@ -111,7 +111,4 @@ function hideInputError(
   errorElement.classList.remove(errorClass);
 }
 
-export {
-  enableValidation,
-  clearValidation,
-};
+export { enableValidation, clearValidation };

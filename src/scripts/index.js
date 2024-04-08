@@ -1,8 +1,8 @@
 import "../../pages/index.css";
-import initialCards from "./cards";
-import { createCard, deleteCard, toggleLikeCard } from "./card";
-import { openPopup, closePopup, closePopupWithOverlay } from "./modal";
+import { getUser, getCards, changeUserInfo, addCard } from "./api";
 import { enableValidation, clearValidation } from "./validation";
+import { openPopup, closePopup, closePopupWithOverlay } from "./modal";
+import { createCard, deleteCardControl, toggleLikeCard } from "./card";
 
 const page = document.querySelector(".page");
 const placesList = page.querySelector(".places__list");
@@ -18,16 +18,18 @@ const nameInput = formEditProfile.name;
 const jobInput = formEditProfile.description;
 const profileTitle = page.querySelector(".profile__title");
 const profileDescription = page.querySelector(".profile__description");
+const profileImage = page.querySelector(".profile__image");
 
 const formNewPlace = document.forms["new-place"];
 const placeNameInput = formNewPlace["place-name"];
 const linkInput = formNewPlace.link;
 
-initialCards.forEach((card) => {
-  placesList.append(
-    createCard(card, deleteCard, openPopupImage, toggleLikeCard)
-  );
-});
+function updateUserInfo({ name, about, avatar }) {
+  profileTitle.textContent = name;
+  profileDescription.textContent = about;
+
+  if (avatar) profileImage.src = avatar;
+}
 
 page.addEventListener("click", function (event) {
   const popupElement = page.querySelector(".popup_is-opened");
@@ -51,8 +53,10 @@ page.addEventListener("click", function (event) {
 function openPopupImage(event) {
   const card = event.target.parentElement;
   popupImage.src = event.target.src;
-  popupCaption.textContent = popupImage.alt =
-    card.querySelector(".card__title").textContent;
+
+  captionText = card.querySelector(".card__title").textContent;
+  popupCaption.textContent = captionText;
+  popupCaption.alt = captionText;
   openPopup(popupTypeImage);
 }
 
@@ -66,26 +70,25 @@ function resetForm(form) {
 function handleFormEditProfileSubmit(event) {
   event.preventDefault();
 
-  profileTitle.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-
-  closePopup(popupTypeEdit);
+  changeUserInfo({
+    name: nameInput.value,
+    about: jobInput.value,
+  }).then((user) => {
+    updateUserInfo(user);
+    closePopup(popupTypeEdit);
+  });
 }
 
 function handleFormNewPlaceSubmit(event) {
   event.preventDefault();
 
-  placesList.prepend(
-    createCard(
-      {
-        name: placeNameInput.value,
-        link: linkInput.value,
-      },
-      deleteCard
-    )
-  );
-
-  closePopup(popupTypeNewCard);
+  addCard({
+    name: placeNameInput.value,
+    link: linkInput.value,
+  }).then((newCard) => {
+    placesList.prepend(createCard(newCard, deleteCardControl));
+    closePopup(popupTypeNewCard);
+  });
 }
 
 enableValidation({
@@ -94,4 +97,13 @@ enableValidation({
   submitButtonSelector: ".popup__button",
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__form-error_visible",
+});
+
+Promise.all([getUser(), getCards()]).then(([user, cards]) => {
+  updateUserInfo(user);
+  cards.forEach((card) => {
+    placesList.append(
+      createCard(card, deleteCardControl, openPopupImage, toggleLikeCard)
+    );
+  });
 });
