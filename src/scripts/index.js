@@ -75,7 +75,7 @@ page.addEventListener("click", function (event) {
 function openPopupImage(event) {
   const card = event.target.parentElement;
   popupImage.image.src = event.target.src;
-  popupImage.image.alt = captionText;
+  popupImage.image.alt = card.querySelector(".card__title").textContent;
   popupImage.caption.textContent =
     card.querySelector(".card__title").textContent;
   openPopup(popups.image);
