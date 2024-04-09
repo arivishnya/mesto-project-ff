@@ -12,7 +12,6 @@ const config = {
   baseUrl: `https://mesto.nomoreparties.co/v1/${cohort}`,
   editBaseUrl: `https://nomoreparties.co/v1/${cohort}`,
 };
-let userId;
 
 function handleResponse(response) {
   if (response.ok) {
@@ -21,29 +20,16 @@ function handleResponse(response) {
   return Promise.reject(`Ошибка: ${response.status}`);
 }
 
-function handleError(error) {
-  console.error(error);
-}
-
 function getUser() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  })
-    .then(handleResponse)
-    .then((result) => {
-      userId = result._id;
-      return result;
-    })
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function getCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function changeUserInfo(data) {
@@ -51,10 +37,7 @@ function changeUserInfo(data) {
     method: "PATCH",
     headers: config.headersWithContentType,
     body: JSON.stringify(data),
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function addCard(data) {
@@ -62,40 +45,28 @@ function addCard(data) {
     method: "POST",
     headers: config.headersWithContentType,
     body: JSON.stringify(data),
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function deleteCard(cardId) {
   return fetch(`${config.editBaseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function addCardLike(cardId) {
   return fetch(`${config.editBaseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function deleteCardLike(cardId) {
   return fetch(`${config.editBaseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 function changeUserAvatar(data) {
@@ -103,14 +74,10 @@ function changeUserAvatar(data) {
     method: "PATCH",
     headers: config.headersWithContentType,
     body: JSON.stringify(data),
-  })
-    .then(handleResponse)
-    .then((result) => result)
-    .catch(handleError);
+  }).then(handleResponse);
 }
 
 export {
-  userId,
   getUser,
   getCards,
   changeUserInfo,

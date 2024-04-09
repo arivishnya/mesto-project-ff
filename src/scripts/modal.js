@@ -9,9 +9,8 @@ function closePopup(elem) {
 }
 
 function closePopupWithEsc(event) {
-  const popupElement = document.querySelector(".popup_is-opened");
-
   if (event.key === "Escape" || event.key === "Esc") {
+    const popupElement = document.querySelector(".popup_is-opened");
     closePopup(popupElement);
   }
 }
@@ -20,4 +19,19 @@ function closePopupWithOverlay(elem) {
   closePopup(elem);
 }
 
-export { openPopup, closePopup, closePopupWithOverlay };
+function setCloseModalByClickListeners(popupList) {
+  popupList.forEach((popup) => {
+    const closeButton = popup.querySelector(".popup__close");
+    closeButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      closePopup(popup);
+    });
+    popup.addEventListener("click", (event) => {
+      if (event.target === popup) {
+        closePopupWithOverlay(popup);
+      }
+    });
+  });
+}
+
+export { openPopup, closePopup, setCloseModalByClickListeners };

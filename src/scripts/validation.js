@@ -16,11 +16,15 @@ function enableValidation({
   });
 }
 
-function clearValidation(form, buttonDisabled = true) {
+function clearValidation(
+  form,
+  { inputSelector, inputErrorClass, errorClass },
+  buttonDisabled = true
+) {
   hideAllInputError(form, {
-    inputSelector: ".popup__input",
-    inputErrorClass: "popup__input_type_error",
-    errorClass: "popup__form-error_visible",
+    inputSelector,
+    inputErrorClass,
+    errorClass,
   });
 
   const buttonElement = form.querySelector(".popup__button");
