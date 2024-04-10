@@ -27,7 +27,7 @@ function clearValidation(
     errorClass,
   });
 
-  const buttonElement = form.querySelector(buttonClass);
+  const buttonElement = form.querySelector(submitButtonSelector);
   buttonElement.disabled = buttonDisabled;
 }
 

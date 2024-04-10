@@ -16,7 +16,7 @@ function closePopupWithEsc(event) {
 }
 
 function closePopupWithOverlay(event, elem) {
-  if (event.target === popup) {
+  if (event.target === elem) {
     closePopup(elem);
   }
 }
