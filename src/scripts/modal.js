@@ -15,8 +15,10 @@ function closePopupWithEsc(event) {
   }
 }
 
-function closePopupWithOverlay(elem) {
-  closePopup(elem);
+function closePopupWithOverlay(event, elem) {
+  if (event.target === popup) {
+    closePopup(elem);
+  }
 }
 
 function setCloseModalByClickListeners(popupList) {
@@ -27,9 +29,7 @@ function setCloseModalByClickListeners(popupList) {
       closePopup(popup);
     });
     popup.addEventListener("click", (event) => {
-      if (event.target === popup) {
-        closePopupWithOverlay(popup);
-      }
+      closePopupWithOverlay(event, popup);
     });
   });
 }

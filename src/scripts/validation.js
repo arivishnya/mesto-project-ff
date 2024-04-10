@@ -18,7 +18,7 @@ function enableValidation({
 
 function clearValidation(
   form,
-  { inputSelector, inputErrorClass, errorClass },
+  { inputSelector, inputErrorClass, errorClass, buttonClass },
   buttonDisabled = true
 ) {
   hideAllInputError(form, {
@@ -27,7 +27,7 @@ function clearValidation(
     errorClass,
   });
 
-  const buttonElement = form.querySelector(".popup__button");
+  const buttonElement = form.querySelector(buttonClass);
   buttonElement.disabled = buttonDisabled;
 }
 

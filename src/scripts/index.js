@@ -65,6 +65,7 @@ const validationConfig = {
   submitButtonSelector: ".popup__button",
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__form-error_visible",
+  buttonClass: "popup__button",
 };
 
 function handleError(error) {
@@ -150,6 +151,7 @@ function handleFormNewPlaceSubmit(event) {
         )
       );
       resetForm(formNewPlace);
+      clearValidation(formNewPlace, validationConfig);
       closePopup(popups.newCard);
     })
     .catch(handleError)
@@ -166,7 +168,6 @@ function handleFormDeleteCardSubmit(event) {
       cardForDelete = {};
       closePopup(popups.deleteCard).catch(handleError);
     })
-    .catch(handleError);
 }
 
 function openCardDeleteConfirmationPopup(id, element) {
