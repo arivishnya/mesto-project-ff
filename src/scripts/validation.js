@@ -18,7 +18,7 @@ function enableValidation({
 
 function clearValidation(
   form,
-  { inputSelector, inputErrorClass, errorClass, buttonClass },
+  { inputSelector, inputErrorClass, errorClass, submitButtonSelector },
   buttonDisabled = true
 ) {
   hideAllInputError(form, {
